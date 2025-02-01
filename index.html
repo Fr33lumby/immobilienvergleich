@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Immobilien vs. Miete+Depot Vergleichsrechner</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .form-group {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    label {
+      width: 180px;
+      font-weight: bold;
+    }
+    input {
+      width: 150px;
+      padding: 4px;
+    }
+    #resultContainer {
+      overflow-x: auto;
+      margin-top: 20px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 800px;
+    }
+    table, th, td {
+      border: 1px solid #666;
+    }
+    th, td {
+      padding: 8px;
+      text-align: right;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    #finalResult {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #ffffff;
+      background: linear-gradient(135deg, #2196F3, #21CBF3);
+    }
+    .buttons {
+      margin-top: 10px;
+      text-align: center;
+    }
+    button {
+      margin: 5px;
+      padding: 10px 20px;
+      font-size: 1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Immobilien vs. Miete+Depot Vergleichsrechner</h1>
+  <div class="container">
+    <!-- Eingabeformular -->
+    <div id="form">
+      <div class="form-group">
+        <label for="Kaufpreis">Kaufpreis (€):</label>
+        <input type="number" id="Kaufpreis" value="500000" step="any">
+      </div>
+      <div class="form-group">
+        <label for="Gesamt_EK">Gesamt_EK (€):</label>
+        <input type="number" id="Gesamt_EK" value="100000" step="any">
+      </div>
+      <div class="form-group">
+        <label for="Davon_fuer_Haus">Davon_fuer_Haus (€):</label>
+        <input type="number" id="Davon_fuer_Haus" value="80000" step="any">
+      </div>
+      <div class="form-group">
+        <label for="Zinssatz">Zinssatz:</label>
+        <input type="number" id="Zinssatz" value="0.03" step="any">
+      </div>
+      <div class="form-group">
+        <label for="Tilgungssatz">Tilgungssatz:</label>
+        <input type="number" id="Tilgungssatz" value="0.02" step="any">
+      </div>
+      <div class="form-group">
+        <label for="Maklergebuehr">Maklergebühr (%):</label>
+        <input type="number" id="Maklergebuehr" value="0.03" step="any">
+      </div>
+      <div class="form-group">
+        <label for="Notar">Notar (%):</label>
+        <input type="number" id="Notar" value="0.015" step="any">
+      </div>
+      <div class="form-group">
+        <label for="Grunderwerbsteuer">Grunderwerbsteuer (%):</label>
+        <input type="number" id="Grunderwerbsteuer" value="0.035" step="any">
+      </div>
+      <div class="form-group">
+        <label for="Start_Miete">Start_Miete (€):</label>
+        <input type="number" id="Start_Miete" value="1000" step="any">
+      </div>
+      <div class="form-group">
+        <label for="Mietsteigerung">Mietsteigerung:</label>
+        <input type="number" id="Mietsteigerung" value="0.02" step="any">
+      </div>
+      <div class="form-group">
+        <label for="Versicherung_Haus">Versicherung_Haus (€):</label>
+        <input type="number" id="Versicherung_Haus" value="20" step="any">
+      </div>
+      <div class="form-group">
+        <label for="Grundsteuer_Haus">Grundsteuer_Haus (€):</label>
+        <input type="number" id="Grundsteuer_Haus" value="10" step="any">
+      </div>
+      <div class="form-group">
+        <label for="Instandhaltungssatz">Instandhaltungssatz:</label>
+        <input type="number" id="Instandhaltungssatz" value="0.01" step="any">
+      </div>
+      <div class="form-group">
+        <label for="Energie_Haus">Energie_Haus (€):</label>
+        <input type="number" id="Energie_Haus" value="50" step="any">
+      </div>
+      <div class="form-group">
+        <label for="Energie_Wohnung">Energie_Wohnung (€):</label>
+        <input type="number" id="Energie_Wohnung" value="30" step="any">
+      </div>
+      <div class="form-group">
+        <label for="Energie_Inflation">Energie_Inflation:</label>
+        <input type="number" id="Energie_Inflation" value="0.02" step="any">
+      </div>
+      <div class="form-group">
+        <label for="Immo_Wertentwicklung">Immo_Wertentwicklung:</label>
+        <input type="number" id="Immo_Wertentwicklung" value="0.02" step="any">
+      </div>
+      <div class="form-group">
+        <label for="Rendite_Depot">Rendite_Depot:</label>
+        <input type="number" id="Rendite_Depot" value="0.04" step="any">
+      </div>
+      <div class="form-group">
+        <label for="Maximale_Rate">Maximale_Rate (€):</label>
+        <input type="number" id="Maximale_Rate" value="1500" step="any">
+      </div>
+    </div>
+    
+    <!-- Steuerungsknöpfe -->
+    <div class="buttons">
+      <button onclick="calculateSimulation()">Berechnen</button>
+      <button onclick="exportPDF()">PDF Snapshot</button>
+    </div>
+    
+    <!-- Ergebnisanzeige als Tabelle -->
+    <div id="resultContainer">
+      <table id="resultTable">
+        <!-- Tabelle wird dynamisch gefüllt -->
+      </table>
+    </div>
+    
+    <!-- Hervorgehobener Endergebnis-Block -->
+    <div id="finalResult"></div>
+  </div>
+  
+  <!-- Skripte -->
+  <script>
+    // Simulation in JavaScript (entsprechend der Python-Logik)
+    function simulate_monthly(Kaufpreis, Gesamt_EK, Davon_fuer_Haus, Zinssatz, Tilgungssatz,
+                              Maklergebuehr, Notar, Grunderwerbsteuer, Start_Miete, Mietsteigerung,
+                              Versicherung_Haus, Grundsteuer_Haus, Instandhaltungssatz,
+                              Energie_Haus, Energie_Wohnung, Energie_Inflation, Immo_Wertentwicklung,
+                              Rendite_Depot, Maximale_Rate) {
+      // Einmalige Gebühren als Prozentsätze berechnen:
+      let one_time_fees = Kaufpreis * Maklergebuehr + Kaufpreis * Notar + Kaufpreis * Grunderwerbsteuer;
+      let effective_equity = (Davon_fuer_Haus >= one_time_fees) ? (Davon_fuer_Haus - one_time_fees) : 0;
+      let loan_amount = Math.max(0, Kaufpreis + one_time_fees - Davon_fuer_Haus);
+      
+      // Restliches Eigenkapital ins Depot:
+      let house_depot = Gesamt_EK - Davon_fuer_Haus;
+      let paid_fees = Math.min(Davon_fuer_Haus, one_time_fees);
+      let cumulative_house_cost = paid_fees;
+      
+      let monthly_interest = Zinssatz / 12;
+      let annuity_payment = (loan_amount > 0) ? (loan_amount * (Zinssatz + Tilgungssatz) / 12) : 0;
+      let outstanding_debt = loan_amount;
+      
+      let rent_depot = Gesamt_EK;
+      let total_rent_depot_contrib = Gesamt_EK;
+      let total_house_depot_contrib = house_depot;
+      
+      let cumulative_rent_cost = 0;
+      let house_value = Kaufpreis;
+      
+      let monthly_immo_factor = Math.pow(1 + Immo_Wertentwicklung, 1/12);
+      let monthly_rent_growth = Math.pow(1 + Mietsteigerung, 1/12);
+      let monthly_energy_inflation = Math.pow(1 + Energie_Inflation, 1/12);
+      let monthly_depot_growth = Math.pow(1 + Rendite_Depot, 1/12);
+      
+      let month = 1;
+      let current_year = 1;
+      let year_house_sum = 0;  
+      let year_rent_sum = 0;   
+      let months_in_year = 0;
+      
+      let monthly_results = [];
+      
+      while (outstanding_debt > 0) {
+        let payment = 0, interest_payment = 0, principal_payment = 0;
+        if (loan_amount > 0) {
+          interest_payment = outstanding_debt * monthly_interest;
+          if (outstanding_debt < (annuity_payment - interest_payment)) {
+            principal_payment = outstanding_debt;
+            payment = outstanding_debt + interest_payment;
+          } else {
+            principal_payment = annuity_payment - interest_payment;
+            payment = annuity_payment;
+          }
+          outstanding_debt = Math.max(0, outstanding_debt - principal_payment);
+        }
+        let insurance = Versicherung_Haus;
+        let property_tax = Grundsteuer_Haus;
+        let maintenance = Kaufpreis * Instandhaltungssatz / 12;
+        let current_energy_house = Energie_Haus * Math.pow(monthly_energy_inflation, month - 1);
+        let house_monthly_cost = payment + insurance + property_tax + maintenance + current_energy_house;
+        cumulative_house_cost += house_monthly_cost;
+        
+        let extra_deposit_house = Math.max(0, Maximale_Rate - house_monthly_cost);
+        total_house_depot_contrib += extra_deposit_house;
+        house_depot = (house_depot + extra_deposit_house) * monthly_depot_growth;
+        
+        house_value *= monthly_immo_factor;
+        
+        let current_rent = Start_Miete * Math.pow(monthly_rent_growth, month - 1);
+        let current_energy_apartment = Energie_Wohnung * Math.pow(monthly_energy_inflation, month - 1);
+        let rent_monthly_cost = current_rent + current_energy_apartment;
+        cumulative_rent_cost += rent_monthly_cost;
+        
+        let extra_deposit_rent = Math.max(0, Maximale_Rate - rent_monthly_cost);
+        total_rent_depot_contrib += extra_deposit_rent;
+        rent_depot = (rent_depot + extra_deposit_rent) * monthly_depot_growth;
+        
+        year_house_sum += house_monthly_cost;
+        year_rent_sum += rent_monthly_cost;
+        months_in_year++;
+        
+        monthly_results.push({
+          Month: month,
+          Year: current_year,
+          Mortgage_Payment: payment,
+          House_Cost: house_monthly_cost,
+          Extra_Deposit_House: extra_deposit_house,
+          House_Depot: house_depot,
+          Outstanding_Debt: outstanding_debt,
+          House_Value: house_value,
+          Rent_Cost: rent_monthly_cost,
+          Extra_Deposit_Rent: extra_deposit_rent,
+          Rent_Depot: rent_depot,
+          Cumulative_House_Cost: cumulative_house_cost,
+          Cumulative_Rent_Cost: cumulative_rent_cost
+        });
+        
+        if (month % 12 === 0 || outstanding_debt === 0) {
+          let avg_house_cost = (months_in_year > 0) ? year_house_sum / months_in_year : 0;
+          let avg_rent_cost = (months_in_year > 0) ? year_rent_sum / months_in_year : 0;
+          monthly_results[monthly_results.length - 1]["Yearly_Avg_HouseCost"] = avg_house_cost;
+          monthly_results[monthly_results.length - 1]["Yearly_Avg_Rent"] = avg_rent_cost;
+          current_year++;
+          year_house_sum = 0;
+          year_rent_sum = 0;
+          months_in_year = 0;
+        }
+        month++;
+      }
+      
+      let simulation_months = month - 1;
+      let yearly_data = [];
+      let num_years = Math.ceil(simulation_months / 12);
+      for (let y = 1; y <= num_years; y++) {
+        let last_record = null;
+        for (let rec of monthly_results) {
+          if (rec.Year === y) { last_record = rec; }
+        }
+        if (last_record !== null) {
+          yearly_data.push({
+            Year: y,
+            House_Value: last_record.House_Value,
+            House_Depot: last_record.House_Depot,
+            Cumulative_House_Cost: last_record.Cumulative_House_Cost,
+            Yearly_Avg_HouseCost: last_record.Yearly_Avg_HouseCost || 0,
+            Yearly_Avg_Rent: last_record.Yearly_Avg_Rent || 0,
+            Rent_Depot: last_record.Rent_Depot,
+            Cumulative_Rent_Cost: last_record.Cumulative_Rent_Cost
+          });
+        }
+      }
+      
+      let house_depot_profit = Math.max(0, house_depot - total_house_depot_contrib);
+      let house_depot_kest = house_depot_profit * 0.275;
+      let net_house_depot = house_depot - house_depot_kest;
+      
+      let rent_depot_profit = Math.max(0, rent_depot - total_rent_depot_contrib);
+      let rent_depot_kest = rent_depot_profit * 0.275;
+      let net_rent_depot = rent_depot - rent_depot_kest;
+      
+      let total_net_house = house_value + net_house_depot;
+      let total_net_rent = net_rent_depot;
+      
+      let summary = {
+        Total_House_Cost: cumulative_house_cost,
+        House_Value_Final: house_value,
+        Total_Net_House: total_net_house,
+        Total_Net_Rent: total_net_rent,
+        House_Depot_Kest: house_depot_kest,
+        Rent_Depot_Kest: rent_depot_kest,
+        Loan_Months: simulation_months,
+        Loan_Years: simulation_months / 12,
+        Total_House_Depot_Contrib: total_house_depot_contrib,
+        Total_Rent_Depot_Contrib: total_rent_depot_contrib,
+        One_Time_Fees: one_time_fees,
+        Loan_Amount: loan_amount
+      };
+      return { yearly_data, summary };
+    }
+    
+    function buildResultTable(yearly_data) {
+      let tableHTML = "<thead><tr>" +
+        "<th>Jahr</th>" +
+        "<th>Hauswert (€)</th>" +
+        "<th>Haus Depot (Brutto, €)</th>" +
+        "<th>Kumul. Hauskosten (€)</th>" +
+        "<th>Ø monatl. Hauskosten (€)</th>" +
+        "<th>Ø monatl. Miete (€)</th>" +
+        "<th>Miet Depot (Brutto, €)</th>" +
+        "</tr></thead><tbody>";
+      yearly_data.forEach(data => {
+        tableHTML += "<tr>" +
+          `<td>${data.Year}</td>` +
+          `<td>${data.House_Value.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>` +
+          `<td>${data.House_Depot.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>` +
+          `<td>${data.Cumulative_House_Cost.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>` +
+          `<td>${data.Yearly_Avg_HouseCost.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>` +
+          `<td>${data.Yearly_Avg_Rent.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>` +
+          `<td>${data.Rent_Depot.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>` +
+          "</tr>";
+      });
+      tableHTML += "</tbody>";
+      return tableHTML;
+    }
+    
+    function buildFinalResult(summary) {
+      return `<h2>Endergebnis</h2>
+        <p>Gesamtvermögen Hauskauf (Hauswert + Depot netto): <strong>${summary.Total_Net_House.toLocaleString(undefined, { minimumFractionDigits:2, maximumFractionDigits:2 })} €</strong></p>
+        <p>Gesamtvermögen Miete (Depot netto): <strong>${summary.Total_Net_Rent.toLocaleString(undefined, { minimumFractionDigits:2, maximumFractionDigits:2 })} €</strong></p>`;
+    }
+    
+    function calculateSimulation() {
+      // Formulareingaben auslesen:
+      let Kaufpreis = parseFloat(document.getElementById("Kaufpreis").value);
+      let Gesamt_EK = parseFloat(document.getElementById("Gesamt_EK").value);
+      let Davon_fuer_Haus = parseFloat(document.getElementById("Davon_fuer_Haus").value);
+      let Zinssatz = parseFloat(document.getElementById("Zinssatz").value);
+      let Tilgungssatz = parseFloat(document.getElementById("Tilgungssatz").value);
+      let Maklergebuehr = parseFloat(document.getElementById("Maklergebuehr").value);
+      let Notar = parseFloat(document.getElementById("Notar").value);
+      let Grunderwerbsteuer = parseFloat(document.getElementById("Grunderwerbsteuer").value);
+      let Start_Miete = parseFloat(document.getElementById("Start_Miete").value);
+      let Mietsteigerung = parseFloat(document.getElementById("Mietsteigerung").value);
+      let Versicherung_Haus = parseFloat(document.getElementById("Versicherung_Haus").value);
+      let Grundsteuer_Haus = parseFloat(document.getElementById("Grundsteuer_Haus").value);
+      let Instandhaltungssatz = parseFloat(document.getElementById("Instandhaltungssatz").value);
+      let Energie_Haus = parseFloat(document.getElementById("Energie_Haus").value);
+      let Energie_Wohnung = parseFloat(document.getElementById("Energie_Wohnung").value);
+      let Energie_Inflation = parseFloat(document.getElementById("Energie_Inflation").value);
+      let Immo_Wertentwicklung = parseFloat(document.getElementById("Immo_Wertentwicklung").value);
+      let Rendite_Depot = parseFloat(document.getElementById("Rendite_Depot").value);
+      let Maximale_Rate = parseFloat(document.getElementById("Maximale_Rate").value);
+      
+      let result = simulate_monthly(Kaufpreis, Gesamt_EK, Davon_fuer_Haus, Zinssatz, Tilgungssatz,
+                                    Maklergebuehr, Notar, Grunderwerbsteuer, Start_Miete, Mietsteigerung,
+                                    Versicherung_Haus, Grundsteuer_Haus, Instandhaltungssatz,
+                                    Energie_Haus, Energie_Wohnung, Energie_Inflation, Immo_Wertentwicklung,
+                                    Rendite_Depot, Maximale_Rate);
+      
+      // Tabelle füllen:
+      let tableHTML = buildResultTable(result.yearly_data);
+      document.getElementById("resultTable").innerHTML = tableHTML;
+      
+      // Endergebnis anzeigen:
+      document.getElementById("finalResult").innerHTML = buildFinalResult(result.summary);
+    }
+    
+    function exportPDF() {
+      // PDF-Export mit jsPDF und jsPDF-AutoTable
+      const { jsPDF } = window.jspdf;
+      let doc = new jsPDF('p', 'pt');
+      
+      // Überschrift
+      doc.setFontSize(18);
+      doc.text("Immobilien vs. Miete+Depot Vergleichsrechner", 40, 40);
+      
+      // PDF-AutoTable für die Ergebnistabelle:
+      let columns = [
+        { header: "Jahr", dataKey: "Year" },
+        { header: "Hauswert (€)", dataKey: "House_Value" },
+        { header: "Haus Depot (Brutto, €)", dataKey: "House_Depot" },
+        { header: "Kumul. Hauskosten (€)", dataKey: "Cumulative_House_Cost" },
+        { header: "Ø monatl. Hauskosten (€)", dataKey: "Yearly_Avg_HouseCost" },
+        { header: "Ø monatl. Miete (€)", dataKey: "Yearly_Avg_Rent" },
+        { header: "Miet Depot (Brutto, €)", dataKey: "Rent_Depot" }
+      ];
+      
+      // Bereite Daten für die Tabelle vor:
+      let data = [];
+      // Holen Sie sich die Zeilen aus dem HTML-Table (alternativ: Nutzen Sie den gleichen Datensatz)
+      let table = document.getElementById("resultTable");
+      // Iteriere über die Zeilen (ab der zweiten Zeile, da erste Zeile die Header enthält)
+      for (let i = 1; i < table.rows.length; i++) {
+        let cells = table.rows[i].cells;
+        data.push({
+          Year: cells[0].innerText,
+          House_Value: cells[1].innerText,
+          House_Depot: cells[2].innerText,
+          Cumulative_House_Cost: cells[3].innerText,
+          Yearly_Avg_HouseCost: cells[4].innerText,
+          Yearly_Avg_Rent: cells[5].innerText,
+          Rent_Depot: cells[6].innerText
+        });
+      }
+      
+      doc.autoTable({
+        startY: 60,
+        head: [columns.map(col => col.header)],
+        body: data.map(row => columns.map(col => row[col.dataKey])),
+        theme: 'grid',
+        headStyles: { fillColor: [100, 100, 100] },
+        styles: { font: "courier", fontSize: 10 }
+      });
+      
+      // Füge ein neues Seitenlayout für das Endergebnis hinzu:
+      doc.addPage();
+      doc.setFontSize(16);
+      doc.text("Endergebnis", 40, 40);
+      
+      let finalText = 
+        "Gesamtvermögen Hauskauf (Hauswert + Depot netto): " + 
+        document.getElementById("finalResult").querySelector("p:nth-child(1)").innerText + "\n" +
+        "Gesamtvermögen Miete (Depot netto): " + 
+        document.getElementById("finalResult").querySelector("p:nth-child(2)").innerText;
+      
+      doc.setFontSize(12);
+      doc.text(finalText, 40, 70);
+      
+      doc.save("vergleichsrechner.pdf");
+    }
+  </script>
+  
+  <!-- Einbindung von jsPDF und jsPDF-AutoTable -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+</body>
+</html>
